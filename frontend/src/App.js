@@ -32,7 +32,7 @@ function App() {
         setLoading(true);
 
         try {
-            const response = await axios.post('https://project-vqau.onrender.com', {
+            const response = await axios.post('https://project-vqau.onrender.com/calculate', {
                 category,
                 selectedFeatures: features,
             });

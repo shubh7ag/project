@@ -7,6 +7,7 @@ function App() {
     const [features, setFeatures] = useState([]);
     const [totalCost, setTotalCost] = useState(0);
     const [errorMessage, setErrorMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const featureOptions = {
         "E-commerce": ["Product Listing", "Payment Integration"],
@@ -15,13 +16,11 @@ function App() {
     };
 
     const handleFeatureChange = (feature) => {
-        setFeatures((prev) => {
-            if (prev.includes(feature)) {
-                return prev.filter(f => f !== feature);
-            } else {
-                return [...prev, feature];
-            }
-        });
+        setFeatures((prev) => 
+            prev.includes(feature) 
+                ? prev.filter(f => f !== feature) 
+                : [...prev, feature]
+        );
     };
 
     const handleCalculate = async () => {
@@ -30,6 +29,7 @@ function App() {
             return;
         }
         setErrorMessage("");
+        setLoading(true);
 
         try {
             const response = await axios.post('https://project-vqau.onrender.com', {
@@ -38,7 +38,10 @@ function App() {
             });
             setTotalCost(response.data.totalCost);
         } catch (error) {
-            console.error(error);
+            setErrorMessage("An error occurred while calculating the cost. Please try again.");
+            console.error("Error details:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -74,7 +77,9 @@ function App() {
                     </div>
                 ))}
             </div>
-            <button className="btn btn-primary" onClick={handleCalculate}>Calculate Cost</button>
+            <button className="btn btn-primary" onClick={handleCalculate} disabled={loading}>
+                {loading ? 'Calculating...' : 'Calculate Cost'}
+            </button>
             <h2 className="mt-3">Total Cost: ${totalCost}</h2>
         </div>
     );

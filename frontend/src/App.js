@@ -32,7 +32,7 @@ function App() {
         setErrorMessage("");
 
         try {
-            const response = await axios.post('http://localhost:5000/calculate', {
+            const response = await axios.post('https://project-vqau.onrender.com', {
                 category,
                 selectedFeatures: features,
             });
